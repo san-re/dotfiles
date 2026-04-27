@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+
+# Auto-setup
+PROJECT_DIR="$HOME/.tmux/projects"
+mkdir -p "$PROJECT_DIR"  # Ensure the config folder exists
+
+EDITOR="${EDITOR:-nvim}"  # Default to nano if $EDITOR is unset
+
+usage() {
+  echo "Usage: tx [init|load|save|edit|delete|list|switch] [project_name]"
+  exit 1
+}
+
+get_project_name() {
+  if [ -n "$1" ]; then
+    echo "$1"
+  else
+    basename "$(pwd)"
+  fi
+}
+
+case "$1" in
+  init)
+    NAME=$(get_project_name "$2")
+    CONF="$PROJECT_DIR/$NAME.conf"
+    if [ -f "$CONF" ]; then
+      echo "Project '$NAME' already exists at $CONF"
+    else
+      echo "new-session -s $NAME -c $HOME/documents/REPOS/$NAME" > "$CONF"
+      echo "Initialized tmux project: $NAME"
+    fi
+    ;;
+
+  load)
+    NAME=$(get_project_name "$2")
+    CONF="$PROJECT_DIR/$NAME.conf"
+    echo "[tx] Project: $NAME"
+    echo "[tx] Config: $CONF"
+    if [ ! -f "$CONF" ]; then
+      echo "No config for project '$NAME' at $CONF"
+      exit 1
+    fi
+    if ! tmux has-session -t "$NAME" 2>/dev/null; then
+      echo "[tx] Starting session from config..." # new session cmd and execute it
+      CMD=$(grep '^new-session' "$CONF")
+      eval "tmux $CMD"
+    else
+      echo "[tx] Session '$NAME' already running."
+    fi
+    echo "[tx] Attaching to session '$NAME'..."
+    tmux attach -t "$NAME"
+    ;;
+
+  save)
+    NAME=$(get_project_name "$2")
+    CONF="$PROJECT_DIR/$NAME.conf"
+    tmux save-buffer - > "$CONF" <<< "$(tmux list-windows -t "$NAME" -F 'new-window -n #{window_name} -c #{pane_current_path} "#{pane_current_command}"')"
+    echo "Saved layout to $CONF"
+    ;;
+
+  edit)
+    NAME=$(get_project_name "$2")
+    "$EDITOR" "$PROJECT_DIR/$NAME.conf"
+    ;;
+
+  delete)
+    NAME=$(get_project_name "$2")
+    rm -i "$PROJECT_DIR/$NAME.conf"
+    ;;
+
+  list)
+    echo "Saved Projects:"
+    ls "$PROJECT_DIR" | sed 's/\.conf$//'
+    echo
+    echo "Running Sessions:"
+    tmux list-sessions 2>/dev/null || echo "None"
+    ;;
+
+  switch)
+    echo "Available Projects:"
+    select name in $(ls "$PROJECT_DIR" | sed 's/\.conf$//'); do
+      [ -n "$name" ] && exec "$0" load "$name"
+    done
+    ;;
+
+  "")
+    "$0" switch
+    ;;
+
+  *)
+    usage
+    ;;
+esac
+

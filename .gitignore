@@ -1,0 +1,18 @@
+#ignore all plugins aside from tpm (since it's a submodule)
+tmux/plugins/*
+!tmux/plugins/tpm/
+
+.env
+*.key
+*.json
+
+# vim swap files
+*.swp
+*.swo
+undo/
+
+# Ignore NPM bloat
+node_modules/
+.npm/
+
+.DS_Store
