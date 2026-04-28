@@ -9,31 +9,30 @@ map("n", "<leader>q", ":cclose<CR>", { silent = true })
 -- -- do <C-o> to go back and <C-i> to go forwards after jumping
 --
 vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(event)
-    local map = function(keys, func, desc)
-      vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
-    end
+    callback = function(event)
+        local map = function(keys, func, desc)
+            vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+        end
 
-    map("gd", vim.lsp.buf.definition, "Go to Definition")
-    map("gr", vim.lsp.buf.references, "Go to References")
-    map("gi", vim.lsp.buf.implementation, "Go to Implementation")
-    map("<leader>fd", "<cmd>Telescope lsp_definitions<cr>", "Find Definitions")
-    map("<leader>fr", "<cmd>Telescope lsp_references<cr>", "Find References")
-  end,
+        map("gd", vim.lsp.buf.definition, "Go to Definition")
+        map("gr", vim.lsp.buf.references, "Go to References")
+        map("gi", vim.lsp.buf.implementation, "Go to Implementation")
+        map("<leader>fd", "<cmd>Telescope lsp_definitions<cr>", "Find Definitions")
+        map("<leader>fr", "<cmd>Telescope lsp_references<cr>", "Find References")
+    end,
 })
---
--- -- See `:help telescope.builtin`
-local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
-vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
-vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+
+map("n", "<leader>sh", "<cmd>Telescope help_tags<cr>", { desc = "[S]earch [H]elp" })
+map("n", "<leader>sk", "<cmd>Telescope keymaps<cr>", { desc = "[S]earch [K]eymaps" })
+map("n", "<leader>sf", "<cmd>Telescope find_files<cr>", { desc = "[S]earch [F]iles" })
+map("n", "<leader>ss", "<cmd>Telescope builtin<cr>", { desc = "[S]earch [S]elect Telescope" })
+map("n", "<leader>sw", "<cmd>Telescope grep_string<cr>", { desc = "[S]earch current [W]ord" })
+map("n", "<leader>sg", "<cmd>Telescope live_grep<cr>", { desc = "[S]earch by [G]rep" })
+map("n", "<leader>sd", "<cmd>Telescope diagnostics<cr>", { desc = "[S]earch [D]iagnostics" })
+map("n", "<leader>sr", "<cmd>Telescope resume<cr>", { desc = "[S]earch [R]esume" })
+map("n", "<leader>s.", "<cmd>Telescope oldfiles<cr>", { desc = '[S]earch Recent Files ("." for repeat)' })
+map("n", "<leader><leader>", "<cmd>Telescope buffers<cr>", { desc = "[ ] Find existing buffers" })
+
 --
 -- -- Slightly advanced example of overriding default behavior and theme
 -- vim.keymap.set("n", "<leader>/", function()
@@ -60,20 +59,12 @@ vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find exis
 
 -- toggle file explorer from nvimtree
 
--- vim.g.mapping_set = ({
--- 					-- Select the [n]ext item
--- 					["<C-n>"] = cmp.mapping.select_next_item(),
--- 					-- Select the [p]revious item
--- 					["<C-p>"] = cmp.mapping.select_prev_item(),
---
--- 					-- Scroll the documentation window [b]ack / [f]orward
--- 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
--- 					["<C-f>"] = cmp.mapping.scroll_docs(4),
--- 					["<C-l>"] = cmp.mapping.confirm({ select = true }),
---
--- 					-- Manually trigger a completion from nvim-cmp.
--- 					--  Generally you don't need this, because nvim-cmp will display
--- 					--  completions whenever it has completion options available.
--- 					["<C-Space>"] = cmp.mapping.complete({}),
---
--- 				}),
+vim.g.blink_keymaps = {
+    ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+    ["<C-e>"] = { "hide" },
+    ["<C-n>"] = { "select_next", "fallback" },
+    ["<C-p>"] = { "select_prev", "fallback" },
+    ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+    ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+    ["<C-l>"] = { "accept", "fallback" },
+}

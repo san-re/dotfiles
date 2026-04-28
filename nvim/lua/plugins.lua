@@ -1,3 +1,4 @@
+-- :PackUpdate
 vim.pack.add({
     "https://github.com/nvim-tree/nvim-tree.lua",
     "https://github.com/rose-pine/neovim",
@@ -10,7 +11,8 @@ vim.pack.add({
     "https://github.com/nvim-lua/plenary.nvim",
     "https://github.com/nvim-telescope/telescope.nvim",
     "https://github.com/stevearc/conform.nvim",
-})
+    "https://github.com/lewis6991/gitsigns.nvim",
+}, { confirm = false })
 
 require("nvim-tree").setup()
 vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle File Explorer" })
@@ -21,23 +23,7 @@ vim.cmd.colorscheme("rose-pine")
 
 require("blink.cmp").setup({
     -- 'default' sets up basic mappings, but we will override them below
-    keymap = {
-        -- Clean slate (optional): preset = 'default',
-
-        ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
-        ["<C-e>"] = { "hide" },
-
-        -- Select the [n]ext / [p]revious item
-        ["<C-n>"] = { "select_next", "fallback" },
-        ["<C-p>"] = { "select_prev", "fallback" },
-
-        -- Scroll the documentation window [b]ack / [f]orward
-        ["<C-b>"] = { "scroll_documentation_up", "fallback" },
-        ["<C-f>"] = { "scroll_documentation_down", "fallback" },
-
-        -- Confirm the selection (Your old <C-l> mapping)
-        ["<C-l>"] = { "accept", "fallback" },
-    },
+    keymap = vim.g.blink_keymaps,
     completion = {
         ghost_text = { enabled = true },
         -- This makes the first item always "selected" so <C-l> feels snappier
@@ -66,7 +52,21 @@ vim.lsp.config("*", {
     capabilities = require("blink.cmp").get_lsp_capabilities(),
 })
 
+vim.lsp.config("lua_ls", {
+    settings = {
+        Lua = {
+            diagnostics = {
+                globals = { "vim" },
+            },
+            workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
+            },
+        },
+    },
+})
 vim.lsp.enable("lua_ls")
+
 vim.lsp.enable("jdtls")
 
 require("nvim-autopairs").setup({
@@ -89,8 +89,8 @@ require("conform").setup({
         },
         -- Google Java Format doesn't have a simple "4-space" flag
         -- but you can use the AOSP style which is 4 spaces.
-        ["google-java-format"] = {
-            prepend_args = { "--aosp" },
-        },
+        -- ["google-java-format"] = {
+        --     prepend_args = { "--aosp" },
+        -- },
     },
 })
