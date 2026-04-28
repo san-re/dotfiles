@@ -133,9 +133,6 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 
 export PATH="$PATH:/opt/go/bin"
 
-# gemini api key
-export GEMINI_API_KEY=AIzaSyDMOhklSNsBy8yiPLlLxbx0pF58AjjBrpo
-
 # shell config to let tx accessed by anywhere
 export PATH="$HOME/bin:$PATH"
 
