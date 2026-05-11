@@ -15,7 +15,6 @@ vim.pack.add({
 }, { confirm = false })
 
 require("nvim-tree").setup()
-vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle File Explorer" })
 
 require("rose-pine").setup()
 
@@ -66,8 +65,12 @@ vim.lsp.config("lua_ls", {
     },
 })
 vim.lsp.enable("lua_ls")
-
 vim.lsp.enable("jdtls")
+vim.lsp.enable("ts_ls")
+vim.lsp.enable("html")
+vim.lsp.enable("cssls")
+vim.lsp.enable("jsonls")
+vim.lsp.enable("eslint")
 
 require("nvim-autopairs").setup({
     check_ts = true, -- Use treesitter to check for context
