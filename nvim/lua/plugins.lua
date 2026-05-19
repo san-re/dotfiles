@@ -13,6 +13,7 @@ vim.pack.add({
     "https://github.com/stevearc/conform.nvim",
     "https://github.com/lewis6991/gitsigns.nvim",
     "https://github.com/kdheepak/lazygit.nvim",
+    "https://github.com/nvim-treesitter/nvim-treesitter",
 }, { confirm = false })
 
 require("nvim-tree").setup()
@@ -25,7 +26,7 @@ require("blink.cmp").setup({
     -- 'default' sets up basic mappings, but we will override them below
     keymap = vim.g.blink_keymaps,
     completion = {
-        ghost_text = { enabled = true },
+        ghost_text = { enabled = false },
         -- This makes the first item always "selected" so <C-l> feels snappier
         list = { selection = { preselect = true, auto_insert = true } },
     },
@@ -99,6 +100,7 @@ require("conform").setup({
     },
 })
 
+-- lazygit stuff:
 vim.g.lazygit_floating_window_winblend = 0 -- transparency of floating window
 vim.g.lazygit_floating_window_scaling_factor = 0.9 -- double scale factor
 vim.g.lazygit_use_custom_config_file_path = 0 -- fallback to default lazygit config
