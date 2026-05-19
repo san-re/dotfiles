@@ -12,6 +12,7 @@ vim.pack.add({
     "https://github.com/nvim-telescope/telescope.nvim",
     "https://github.com/stevearc/conform.nvim",
     "https://github.com/lewis6991/gitsigns.nvim",
+    "https://github.com/kdheepak/lazygit.nvim",
 }, { confirm = false })
 
 require("nvim-tree").setup()
@@ -97,3 +98,8 @@ require("conform").setup({
         -- },
     },
 })
+
+vim.g.lazygit_floating_window_winblend = 0 -- transparency of floating window
+vim.g.lazygit_floating_window_scaling_factor = 0.9 -- double scale factor
+vim.g.lazygit_use_custom_config_file_path = 0 -- fallback to default lazygit config
+vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "Toggle LazyGit", silent = true })
